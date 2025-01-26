@@ -1,7 +1,14 @@
+import os
 import gradio as gr
 from huggingface_hub import InferenceClient
 
-client = InferenceClient("HuggingFaceH4/zephyr-7b-beta")
+# Fetch model name from environment variable
+model_name = os.getenv("HF_MODEL_NAME", "HuggingFaceH4/zephyr-7b-beta")
+
+try:
+    client = InferenceClient(model_name)
+except Exception as e:
+    raise RuntimeError(f"Failed to initialize InferenceClient for model '{model_name}': {str(e)}")
 
 
 def respond(message, history, system_message, max_tokens, temperature, top_p):
